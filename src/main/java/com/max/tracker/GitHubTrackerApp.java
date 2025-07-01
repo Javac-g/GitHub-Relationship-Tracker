@@ -1,8 +1,23 @@
 package com.max.tracker;
 
-public class GitHubTrackerApp {
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class GitHubTrackerApp implements CommandLineRunner {
+    private final GitHubService service;
+
+    public GitHubTrackerApp(GitHubService service) {
+        this.service = service;
+    }
+
     public static void main(String[] args) {
-        GitHubService service = new GitHubService();
+        SpringApplication.run(GitHubTrackerApp.class, args);
+    }
+
+    @Override
+    public void run(String... args) {
         service.refresh();
     }
 }
