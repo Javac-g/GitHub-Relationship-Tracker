@@ -20,7 +20,7 @@ public class GitHubService {
 
     public void refresh() {
         if (token == null || token.isEmpty()) {
-            System.out.println("⚠️ Set github.token in application.properties");
+            System.out.println("Set github.token in application.properties");
             return;
         }
 
@@ -28,28 +28,28 @@ public class GitHubService {
             GitHub github = new GitHubBuilder().withOAuthToken(token).build();
             GHMyself me = github.getMyself();
 
-            // Followers: users who follow me
+            // follow me
             Set<String> followers = me.getFollowers().stream()
                     .map(GHUser::getLogin)
                     .collect(Collectors.toSet());
 
-            // Following: users I follow
+            // I follow
             Set<String> following = me.getFollows().stream()
                     .map(GHUser::getLogin)
                     .collect(Collectors.toSet());
 
-            // Previously known followers (to detect unsubscribed)
+            // Previously (to detect unsubscribed)
             Set<String> prev = loadPreviousFollowers();
 
-            // People I used to be followed by, but not anymore
+            // People I used to be followed by
             Set<String> unsubscribed = new HashSet<>(prev);
             unsubscribed.removeAll(followers);
 
-            // People I follow but who don't follow me back
+            // People who don't follow me back
             Set<String> notSubscribed = new HashSet<>(following);
             notSubscribed.removeAll(followers);
 
-            // Mutual follows (both follow each other)
+            // Mutual follows 
             Set<String> mutual = new HashSet<>(followers);
             mutual.retainAll(following);
 
@@ -67,10 +67,10 @@ public class GitHubService {
 
             saveFollowers(followers);
 
-            System.out.println("✅ Report generated: github_followers_report.xlsx");
+            System.out.println("Report generated: github_followers_report.xlsx");
 
         } catch (IOException e) {
-            System.out.println("❌ Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
